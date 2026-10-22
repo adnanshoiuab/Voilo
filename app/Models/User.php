@@ -6,9 +6,10 @@ namespace App\Models;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
@@ -23,7 +24,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'avatar'
+        'avatar',
     ];
 
     /**
@@ -55,13 +56,14 @@ class User extends Authenticatable
         return $this->hasMany(Job::class);
     }
 
-    // Relation to bookmarks
-    public function bookmarkedJobs(): BelongsToMany{
-        return $this->belongsToMany(job::class, 'job_user_bookmarks')->withTimestamps();
+    public function bookmarkedJobs(): BelongsToMany
+    {
+        return $this->belongsToMany(Job::class, 'job_user_bookmarks', 'user_id', 'job_id')
+            ->withTimestamps();
     }
 
-    // Relation to applicants
-    public function applicants(): HasMany{
+    public function applicants(): HasMany
+    {
         return $this->hasMany(Applicant::class, 'user_id');
     }
 }

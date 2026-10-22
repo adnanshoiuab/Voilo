@@ -23,7 +23,7 @@
 
             <x-inputs.text id="tags" name="tags" label="Tags (comma-separated)" placeholder="development, coding, java, python" :value="old('tags', $job->tags)" />
 
-            <x-inputs.select id="id_type" name="job_type" label="Job Type" :value="old('job_type', $job->job_type)" :options="['Full-Time' => 'Full-Time', 'Part-Time' => 'Part-Time', 'Contract' => 'Contract', 'Temporary' => 'Temporary', 'Internship' => 'Internship', 'Volunteer' => 'Volunteer', 'On-Call' => 'On-Call']"/>
+            <x-inputs.select id="job_type" name="job_type" label="Job Type" :value="old('job_type', $job->job_type)" :options="['Full-Time' => 'Full-Time', 'Part-Time' => 'Part-Time', 'Contract' => 'Contract', 'Freelance' => 'Freelance', 'Internship' => 'Internship']"/>
 
             <x-inputs.select id="remote" name="remote" label="Remote" :value="old('remote', $job->remote)" :options="[0 => 'No', 1 => 'Yes']"/>
 
@@ -31,7 +31,7 @@
             
             <x-inputs.text id="city" name="city" label="city" placeholder="Albany" :value="old('city', $job->city)" />
 
-            <x-inputs.text id="State" name="State" label="State" placeholder="NY" :value="old('state', $job->state)" />
+            <x-inputs.text id="state" name="state" label="State" placeholder="NY" :value="old('state', $job->state)" />
 
             <x-inputs.text id="zipcode" name="zipcode" label="zipcode" placeholder="32546" :value="old('zipcode', $job->zipcode)" />
 
@@ -47,7 +47,7 @@
 
             <x-inputs.text id="contact_phone" name="contact_phone" label="Contact Phone" placeholder="Enter Contact Phone" :value="old('contact_phone', $job->contact_phone)" />
 
-            <x-inputs.text id="company_email" name="company_email" label="Company Email" placeholder="Enter Company Email" type="email" :value="old('company_email', $job->company_email)" />
+            <x-inputs.text id="contact_email" name="contact_email" label="Company Email" placeholder="Enter Company Email" type="email" :value="old('contact_email', $job->contact_email)" />
 
             <x-inputs.file id="company_logo" name="company_logo" label="Company Logo"/>
 

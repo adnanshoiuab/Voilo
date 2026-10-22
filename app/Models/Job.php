@@ -33,25 +33,22 @@ class Job extends Model
         'company_description',
         'company_logo',
         'company_website',
-        'user_id'
+        'user_id',
     ];
 
-    // Relation to user
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    // Relation to bookmarks
     public function bookmarkedByUsers(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'bookmarks', 'job_user_bookmark')->withTimestamps();
+        return $this->belongsToMany(User::class, 'job_user_bookmarks', 'job_id', 'user_id')
+            ->withTimestamps();
     }
 
-    // Relation to applicants
-    public function applicants(): HasMany {
+    public function applicants(): HasMany
+    {
         return $this->hasMany(Applicant::class);
     }
-
-    
 }

@@ -3,8 +3,8 @@
 namespace Database\Factories;
 
 use App\Models\Job;
-use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends Factory<Job>
@@ -24,7 +24,7 @@ class JobFactory extends Factory
             'description' => $this->faker->paragraph(2, true),
             'salary' => $this->faker->numberBetween(30000, 150000),
             'tags' => implode(',', $this->faker->words(3)),
-            'job_type' => $this->faker->randomElement(['full-time', 'part-time', 'contract', 'internship', 'temporary', 'volunteer', 'On-Call', 'other']),
+            'job_type' => $this->faker->randomElement(['Full-Time', 'Part-Time', 'Contract', 'Freelance', 'Internship']),
             'remote' => $this->faker->boolean(),
             'requirements' => $this->faker->sentences(3, true),
             'benefits' => $this->faker->sentences(2, true),

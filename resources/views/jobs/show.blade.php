@@ -168,10 +168,14 @@
 <script src="https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    // Your Mapbox access token
-    mapboxgl.accessToken = "{{ env('MAPBOX_API_KEY') }}";
+    mapboxgl.accessToken = {{ \Illuminate\Support\Js::from(config('services.mapbox.key')) }};
 
-    // Initialize the map
+    const city = {{ \Illuminate\Support\Js::from($job->city) }};
+    const state = {{ \Illuminate\Support\Js::from($job->state) }};
+    if (!mapboxgl.accessToken || !city || !state) {
+      return;
+    }
+
     const map = new mapboxgl.Map({
       container: 'map', // ID of the container element
       style: 'mapbox://styles/mapbox/streets-v11', // Map style
@@ -179,17 +183,20 @@
       zoom: 9, // Default zoom level
     });
 
-    // Get address from Laravel view
-    const city = '{{ $job->city }}';
-    const state = '{{ $job->state }}';
     const address = city + ', ' + state;
 
     // Geocode the address
     fetch(
         `/geocode?address=${encodeURIComponent(address)}`)
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Geocoding service is unavailable.');
+        }
+
+        return response.json();
+      })
       .then((data) => {
-        if (data.features.length > 0) {
+        if (Array.isArray(data.features) && data.features.length > 0) {
           const [longitude, latitude] = data.features[0].center;
 
           // Center the map and add a marker
