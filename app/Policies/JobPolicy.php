@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\Job;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class JobPolicy
 {
@@ -13,7 +12,7 @@ class JobPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -21,7 +20,7 @@ class JobPolicy
      */
     public function view(User $user, Job $job): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -29,7 +28,7 @@ class JobPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return true;
     }
 
     /**

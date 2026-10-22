@@ -58,10 +58,10 @@
                     <div class="border-b-2 border-gray-200 py-2">
                         <p class="text-gray-700"><strong>Name: </strong>{{ $applicant->full_name }}</p>
                         <p class="text-gray-700"><strong>Phone: </strong>{{ $applicant->contact_phone }}</p>
-                        <p class="text-gray-700"><strong>Email: </strong>{{ $applicant->email }}</p>
+                        <p class="text-gray-700"><strong>Email: </strong>{{ $applicant->contact_email }}</p>
                         <p class="text-gray-700"><strong>Message: </strong>{{ $applicant->message }}</p>
                         <p class="text-gray-800 my-4">
-                            <a href="{{ asset('storage/' . $applicant->resume_path)}}" class="text-blue-500 hover:underline" download><i class="fas fa-download"></i> Download Resume</a>
+                            <a href="{{ route('applications.resume', $applicant) }}" class="text-blue-500 hover:underline"><i class="fas fa-download"></i> Download Resume</a>
                         </p>
                         {{-- Delete Applicant --}}
                         <form method="POST" action="{{ route('applications.destroy', $applicant->id) }}" onsubmit="return confirm('Are you sure that you want to delete this applicant?')">
