@@ -11,10 +11,23 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
+use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ApplicantController extends Controller
 {
+    public function index(Request $request): View
+    {
+        $applications = $request->user()
+            ->applicants()
+            ->with('job')
+            ->latest()
+            ->paginate(10);
+
+        return view('applications.index', compact('applications'));
+    }
+
     // @desc Store a new job application
     // @route POST /jobs/{job}/apply
     public function store(Request $request, Job $job): RedirectResponse
@@ -66,6 +79,19 @@ class ApplicantController extends Controller
         abort_unless(Storage::disk('local')->exists($applicant->resume_path), 404);
 
         return Storage::disk('local')->download($applicant->resume_path);
+    }
+
+    public function updateStatus(Request $request, Applicant $applicant): RedirectResponse
+    {
+        abort_unless($request->user()->id === $applicant->job->user_id, 403);
+
+        $validatedData = $request->validate([
+            'status' => ['required', 'string', Rule::in(Applicant::STATUSES)],
+        ]);
+
+        $applicant->update($validatedData);
+
+        return redirect()->route('dashboard')->with('success', 'Application status updated.');
     }
 
     public function destroy(Request $request, Applicant $applicant): RedirectResponse

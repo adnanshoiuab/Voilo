@@ -16,8 +16,13 @@ class DashboardController extends Controller
         $user = Auth::user();
 
         // Get the user listings
-        $jobs = Job::where('user_id', $user->id)->with('applicants')->latest()->get();
+        $jobs = Job::where('user_id', $user->id)
+            ->with('applicants.user')
+            ->latest()
+            ->get();
 
-        return view('dashboard.index', compact('user', 'jobs'));
+        $workExperiences = $user->workExperiences;
+
+        return view('dashboard.index', compact('user', 'jobs', 'workExperiences'));
     }
 }

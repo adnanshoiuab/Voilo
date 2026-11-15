@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
+use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
@@ -14,34 +15,40 @@ class ProfileController extends Controller
     // @route   PUT /profile
     public function update(Request $request): RedirectResponse
     {
-        // Get logged in user
-        $user = Auth::user();
-        // Validated data
+        $user = $request->user();
         $validatedData = $request->validate([
-            'name' => 'required|string',
-            'email' => ['required', 'string', 'email', Rule::unique('users')->ignore($user->id)],
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'avatar' => 'nullable|image|mimes:jpeg,jpg,png,gif|max:2048',
+            'headline' => ['nullable', 'string', 'max:255'],
+            'bio' => ['nullable', 'string', 'max:5000'],
+            'github_url' => ['nullable', 'url', 'max:255'],
+            'portfolio_url' => ['nullable', 'url', 'max:255'],
+            'profile_is_public' => ['sometimes', 'boolean'],
         ]);
 
-        // Get user name and email
-        $user->name = $request->input('name');
-        $user->email = $request->input('email');
+        $user->fill($validatedData);
+        $user->profile_is_public = $request->boolean('profile_is_public');
 
-        // Handle avatar upload
         if ($request->hasFile('avatar')) {
-            // Delete old avatar if exists
             if ($user->avatar) {
                 Storage::disk('public')->delete($user->avatar);
             }
 
-            // Store new avatar
-            $avatarPath = $request->file('avatar')->store('avatars', 'public');
-            $user->avatar = $avatarPath;
+            $user->avatar = $request->file('avatar')->store('avatars', 'public');
         }
 
-        // Update user info
         $user->save();
 
         return redirect()->route('dashboard')->with('success', 'Profile info updated!');
+    }
+
+    public function show(User $user): View
+    {
+        abort_unless($user->profile_is_public || auth()->id() === $user->id, 404);
+
+        $user->load('workExperiences');
+
+        return view('profiles.show', ['candidate' => $user]);
     }
 }

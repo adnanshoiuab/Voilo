@@ -9,6 +9,8 @@
         <x-nav-link url="/jobs" :active="request()->is('jobs')" icon="briefcase">All Jobs</x-nav-link>
         @auth
         <x-nav-link url="/bookmarks" :active="request()->is('bookmarks')" icon="bookmark">Saved Jobs</x-nav-link>
+        <a href="{{ route('applications.index') }}" class="text-white hover:underline">My Applications</a>
+        <a href="{{ route('saved-searches.index') }}" class="text-white hover:underline">Saved Searches</a>
         
         <x-logout-button />
         
@@ -36,6 +38,8 @@
     <x-nav-link url="/jobs" :active="request()->is('jobs')" :mobile="true" icon="briefcase">All Jobs</x-nav-link>
     @auth
     <x-nav-link url="/bookmarks" :active="request()->is('bookmarks')" :mobile="true" icon="bookmark">Saved Jobs</x-nav-link>
+    <x-nav-link url="{{ route('applications.index') }}" :active="request()->routeIs('applications.index')" :mobile="true" icon="file-lines">My Applications</x-nav-link>
+    <x-nav-link url="{{ route('saved-searches.index') }}" :active="request()->routeIs('saved-searches.index')" :mobile="true" icon="magnifying-glass">Saved Searches</x-nav-link>
     <x-nav-link url="/dashboard" :active="request()->is('dashboard')" :mobile="true" icon="gauge">Dashboard</x-nav-link>
     <x-logout-button />
     <div class="pt-2"></div>

@@ -9,7 +9,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Applicant extends Model
 {
     use HasFactory;
-    
+
+    public const STATUSES = [
+        'Applied',
+        'Reviewing',
+        'Interview',
+        'Offered',
+        'Rejected',
+    ];
+
     protected $fillable = [
         'job_id',
         'user_id',
@@ -19,15 +27,16 @@ class Applicant extends Model
         'message',
         'location',
         'resume_path',
+        'status',
     ];
 
-    // Relation to job
-    public function job(): BelongsTo{
+    public function job(): BelongsTo
+    {
         return $this->belongsTo(Job::class);
     }
 
-    // Relation to user
-    public function user(): BelongsTo{
+    public function user(): BelongsTo
+    {
         return $this->belongsTo(User::class);
     }
 }
