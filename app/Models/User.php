@@ -25,6 +25,11 @@ class User extends Authenticatable
         'email',
         'password',
         'avatar',
+        'headline',
+        'bio',
+        'github_url',
+        'portfolio_url',
+        'profile_is_public',
     ];
 
     /**
@@ -47,6 +52,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'profile_is_public' => 'boolean',
         ];
     }
 
@@ -65,5 +71,15 @@ class User extends Authenticatable
     public function applicants(): HasMany
     {
         return $this->hasMany(Applicant::class, 'user_id');
+    }
+
+    public function workExperiences(): HasMany
+    {
+        return $this->hasMany(WorkExperience::class)->orderByDesc('start_date');
+    }
+
+    public function savedSearches(): HasMany
+    {
+        return $this->hasMany(SavedSearch::class);
     }
 }

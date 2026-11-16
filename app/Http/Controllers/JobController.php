@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Job;
+use App\Services\JobSearch;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -171,29 +172,11 @@ class JobController extends Controller
             'location' => ['nullable', 'string', 'max:255'],
         ]);
 
-        $keywords = strtolower($validatedData['keywords'] ?? '');
-        $location = strtolower($validatedData['location'] ?? '');
-
-        $query = Job::query();
-
-        if ($keywords !== '') {
-            $query->where(function ($q) use ($keywords) {
-                $q->whereRaw('LOWER(title) like ?', ['%'.$keywords.'%'])
-                    ->orWhereRaw('LOWER(description) like ?', ['%'.$keywords.'%'])
-                    ->orWhereRaw('LOWER(tags) like ?', ['%'.$keywords.'%']);
-            });
-        }
-
-        if ($location !== '') {
-            $query->where(function ($q) use ($location) {
-                $q->whereRaw('LOWER(address) like ?', ['%'.$location.'%'])
-                    ->orWhereRaw('LOWER(city) like ?', ['%'.$location.'%'])
-                    ->orWhereRaw('LOWER(state) like ?', ['%'.$location.'%'])
-                    ->orWhereRaw('LOWER(zipcode) like ?', ['%'.$location.'%']);
-            });
-        }
-
-        $jobs = $query->paginate(12)->withQueryString();
+        $jobs = JobSearch::apply(
+            Job::query(),
+            $validatedData['keywords'] ?? '',
+            $validatedData['location'] ?? '',
+        )->paginate(12)->withQueryString();
 
         return view('jobs.index')->with('jobs', $jobs);
 
